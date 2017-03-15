@@ -129,7 +129,7 @@ env:
        
 ```
 ##### Client Authentication
-To enable client authentication the `tomcat.ssl_enabled` configuration must be `true`.  The trust store and password required for client authentication can then be configured with the `SERVER_TRUSTSTORE` and `SERVER_KEYSTORE_PASS` environment variables.
+To enable client authentication the `tomcat.ssl_enabled` configuration must be `true`.  The trust store and password required for client authentication can then be configured with the `SERVER_TRUSTSTORE` and `SERVER_TRUSTSTORE_PASS` environment variables.
 The value of the `SERVER_TRUSTSTORE` variable is a JKS trust store as a PEM-encoded string.
 
 Example in a manifest.yml
