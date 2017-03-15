@@ -24,6 +24,7 @@ require 'java_buildpack/container/tomcat/tomcat_logging_support'
 require 'java_buildpack/container/tomcat/tomcat_access_logging_support'
 require 'java_buildpack/container/tomcat/tomcat_redis_store'
 require 'java_buildpack/container/tomcat/tomcat_gemfire_store'
+require 'java_buildpack/container/tomcat/tomcat_ssl_support'
 require 'java_buildpack/util/java_main_utils'
 
 module JavaBuildpack
@@ -57,7 +58,8 @@ module JavaBuildpack
           TomcatAccessLoggingSupport.new(sub_configuration_context(context, 'access_logging_support')),
           TomcatRedisStore.new(sub_configuration_context(context, 'redis_store')),
           TomcatGemfireStore.new(sub_configuration_context(context, 'gemfire_store')),
-          TomcatInsightSupport.new(context)
+          TomcatInsightSupport.new(context),
+          TomcatSslSupport.new(sub_configuration_context(context, 'ssl_support'))
         ]
 
         tomcat_configuration = @configuration['tomcat']

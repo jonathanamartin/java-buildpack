@@ -50,6 +50,7 @@ The container can be configured by modifying the [`config/tomcat.yml`][] file in
 | `tomcat.repository_root` | The URL of the Tomcat repository index ([details][repositories]).
 | `tomcat.version` | The version of Tomcat to use. Candidate versions can be found in [this listing](http://download.pivotal.io.s3.amazonaws.com/tomcat/index.yml).
 | `tomcat.external_configuration_enabled` | Set to `true` to be able to supply an external Tomcat configuration. Default is `false`.
+| `tomcat.ssl_enabled` | Set to `true` to enable a secure `Connector` using the `https` scheme.  By default the port will be set to `8080` in order to accommodate TCP routes.  If the value is `true`, the application must also have at a minimum two environment variables: `SERVER_KEYSTORE` and `SERVER_KEYSTORE_PASS`.  
 | `external_configuration.version` | The version of the External Tomcat Configuration to use. Candidate versions can be found in the the repository that you have created to house the External Tomcat Configuration. Note: It is required the external configuration to allow symlinks.
 | `external_configuration.repository_root` | The URL of the External Tomcat Configuration repository index ([details][repositories]).
 
@@ -96,6 +97,67 @@ tomcat
 Notes:
 * It is required the external configuration to allow symlinks. For more information check [Tomcat 7 configuration] or [Tomcat 8 configuration].
 * `JasperListener` is removed in Tomcat 8 so you should not add it to the server.xml.
+
+#### SSL/TLS Connector
+To configure an SSL/TLS `<Connector>` on port `8080` for use with TCP routes use the `tomcat.ssl_enabled` configuration in conjunction with the `SERVER_KEYSTORE` and `SERVER_KEYSTORE_PASS` environment variables.
+The value of the `SERVER_KEYSTORE` variable is a JKS key store as a PEM-encoded string.
+
+Example in a manifest.yml
+```
+env:
+  JBP_CONFIG_TOMCAT: "{ tomcat: { ssl_enabled: true } }"
+  SERVER_KEYSTORE_PASS:  password
+  SERVER_KEYSTORE: |
+    Bag Attributes
+        friendlyName: hostname
+        localKeyId: 54 69 6D 65 20 31 34 38 37 30 31 35 32 33 38 31 35 31
+    Key Attributes: <No Attributes>
+    -----BEGIN ENCRYPTED PRIVATE KEY-----
+    MIIB8zCCAVwCCQCLgU6CRfFs5jANBgkqhkiG9w0BAQUFADBFMQswCQYDVQQGEwJB
+    VTETMBEGA1UECBMKU29tZS1TdGF0ZTEhMB8GA1UEChMYSW50ZXJuZXQgV2lkZ2l0
+    ...
+    VhORg7+d5moBrryXFJfeiybtuIEA+1AOwEkdp1MAKBhRZYmeoQXPAieBrCp6l+Ax
+    BaLg0R513H6KdlpsIOh6Ywa1r/ID0As=
+    -----BEGIN ENCRYPTED PRIVATE KEY-----
+    -----BEGIN CERTIFICATE-----
+    MIICsjCCAhugAwIBAgIJAMcyGWdRwnFlMA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV
+    BAYTAkFVMRMwEQYDVQQIEwpTb21lLVN0YXRlMSEwHwYDVQQKExhJbnRlcm5ldCBX
+    ...
+    ItuuqKphqhSb6PEcFMzuVpTbN09ko54cHYIIULrSj3lEkoY9KJ1ONzxKjeGMHrOP
+    KS+vQr1+OCpxozj1qdBzvHgCS0DrtA==
+    -----END CERTIFICATE-----
+       
+```
+##### Client Authentication
+To enable client authentication the `tomcat.ssl_enabled` configuration must be `true`.  The trust store and password required for client authentication can then be configured with the `SERVER_TRUSTSTORE` and `SERVER_KEYSTORE_PASS` environment variables.
+The value of the `SERVER_TRUSTSTORE` variable is a JKS trust store as a PEM-encoded string.
+
+Example in a manifest.yml
+```
+env:
+  JBP_CONFIG_TOMCAT: "{ tomcat: { ssl_enabled: true } }"
+  SERVER_TRUSTSTORE_PASS:  password
+  SERVER_TRUSTSTORE: |
+    Bag Attributes
+        friendlyName: client-name
+        localKeyId: 54 69 6D 65 20 31 34 38 37 30 31 35 32 33 38 39 38 31
+    Key Attributes: <No Attributes>
+    -----BEGIN ENCRYPTED PRIVATE KEY-----
+    UIIB8zCCAVwCCQCLgU6CRfFs5jANBgkqhkiG9w0BAQUFADBFMQswCQYDVQQGEwJB
+    VTETMBEGA1UECBMKU29tZS1TdGF0ZTEhMB8GA1UEChMYSW50ZXJuZXQgV2lkZ2l0
+    ...
+    VhORg7+d5moBrryXFJfeiybtuIEA+1AOwEkdp1MAKBhRZYmeoQXPAieBrCp6l+Ax
+    BaLg0R513H6KdlpsIOh6Ywa1r/ID0As=
+    -----BEGIN ENCRYPTED PRIVATE KEY-----
+    -----BEGIN CERTIFICATE-----
+    JIICsjCCAhugAwIBAgIJAMcyGWdRwnFlMA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV
+    BAYTAkFVMRMwEQYDVQQIEwpTb21lLVN0YXRlMSEwHwYDVQQKExhJbnRlcm5ldCBX
+    ...
+    ItuuqKphqhSb6PEcFMzuVpTbN09ko54cHYIIULrSj3lEkoY9KJ1ONzxKjeGMHrOP
+    KS+vQr1+OCpxozj1qdBzvHgCS0DrtA==
+    -----END CERTIFICATE-----
+       
+```
 
 ## Session Replication
 By default, the Tomcat instance is configured to store all Sessions and their data in memory.  Under certain circumstances it my be appropriate to persist the Sessions and their data to a repository.  When this is the case (small amounts of data that should survive the failure of any individual instance), the buildpack can automatically configure Tomcat to do so by binding an appropriate service.

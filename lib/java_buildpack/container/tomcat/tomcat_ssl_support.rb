@@ -27,7 +27,6 @@ module JavaBuildpack
 
       # (see JavaBuildpack::Component::BaseComponent#compile)
       def compile
-
         return unless supports?
         mutate_server
       end
@@ -37,21 +36,16 @@ module JavaBuildpack
         true
       end
 
+      private
+
       def mutate_server
         document = read_xml server_xml
-        server   = REXML::XPath.match(document, '/Server').first
-
-        #add_listener server
         write_xml server_xml, document
       end
 
       # (see JavaBuildpack::Component::BaseComponent#release)
       def release
       end
-
-
-
-
 
     end
 

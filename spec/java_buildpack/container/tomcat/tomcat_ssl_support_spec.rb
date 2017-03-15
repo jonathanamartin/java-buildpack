@@ -15,6 +15,7 @@
 # limitations under the License.
 
 require 'spec_helper'
+require 'console_helper'
 require 'component_helper'
 require 'java_buildpack/container/tomcat/tomcat_ssl_support'
 
@@ -23,17 +24,16 @@ describe JavaBuildpack::Container::TomcatSslSupport do
 
   let(:component_id) { 'tomcat' }
 
-  it 'always detects' do
-    #expect(sandbox + 'conf/context.xml').to exist
-    expect(true)
+  let(:configuration) do
+    { 'database'             => 'test-database',
+      'timeout'              => 'test-timeout',
+      'connection_pool_size' => 'test-connection-pool-size' }
   end
 
-  it 'mutates server.xml',
+  it 'Updates Connector in server.xml to expose port 8080 over HTTPS',
      app_fixture: 'container_tomcat_ssl_support' do
     component.compile
     expect(sandbox + 'conf/server.xml').to exist
-#    expect((sandbox + 'conf/server.xml').read)
-#      .to eq(Pathname.new('spec/fixtures/container_tomcat_gemfire_store_server_after.xml').read)
   end
 
 end

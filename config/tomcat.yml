@@ -20,6 +20,7 @@ tomcat:
   repository_root: "{default.repository.root}/tomcat"
   context_path: 
   external_configuration_enabled: false
+  ssl_enabled: false
 external_configuration:
   version: 1.+
   repository_root: 

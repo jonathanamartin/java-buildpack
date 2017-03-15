@@ -24,6 +24,7 @@ require 'java_buildpack/container/tomcat/tomcat_lifecycle_support'
 require 'java_buildpack/container/tomcat/tomcat_logging_support'
 require 'java_buildpack/container/tomcat/tomcat_access_logging_support'
 require 'java_buildpack/container/tomcat/tomcat_redis_store'
+require 'java_buildpack/container/tomcat/tomcat_ssl_support'
 
 describe JavaBuildpack::Container::Tomcat do
   include_context 'component_helper'
@@ -36,7 +37,8 @@ describe JavaBuildpack::Container::Tomcat do
       'logging_support'        => logging_support_configuration,
       'access_logging_support' => access_logging_support_configuration,
       'redis_store'            => redis_store_configuration,
-      'external_configuration' => tomcat_external_configuration }
+      'external_configuration' => tomcat_external_configuration,
+      'ssl_support'             => ssl_support_configuration }
   end
 
   let(:tomcat_configuration) { { 'external_configuration_enabled' => false } }
@@ -50,6 +52,8 @@ describe JavaBuildpack::Container::Tomcat do
   let(:redis_store_configuration) { double('redis-store-configuration') }
 
   let(:tomcat_external_configuration) { double('tomcat_external_configuration') }
+
+  let(:ssl_support_configuration) { double('ssl_support_configuration') }
 
   it 'detects WEB-INF',
      app_fixture: 'container_tomcat' do
@@ -81,6 +85,8 @@ describe JavaBuildpack::Container::Tomcat do
     expect(JavaBuildpack::Container::TomcatRedisStore)
       .to receive(:new).with(sub_configuration_context(redis_store_configuration))
     expect(JavaBuildpack::Container::TomcatInsightSupport).to receive(:new).with(context)
+    expect(JavaBuildpack::Container::TomcatSslSupport)
+      .to receive(:new).with(sub_configuration_context(ssl_support_configuration))
 
     component.sub_components context
   end
