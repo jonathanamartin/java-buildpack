@@ -108,10 +108,6 @@ env:
   JBP_CONFIG_TOMCAT: "{ tomcat: { ssl_enabled: true } }"
   SERVER_KEYSTORE_PASS:  password
   SERVER_KEYSTORE: |
-    Bag Attributes
-        friendlyName: hostname
-        localKeyId: 54 69 6D 65 20 31 34 38 37 30 31 35 32 33 38 31 35 31
-    Key Attributes: <No Attributes>
     -----BEGIN ENCRYPTED PRIVATE KEY-----
     MIIB8zCCAVwCCQCLgU6CRfFs5jANBgkqhkiG9w0BAQUFADBFMQswCQYDVQQGEwJB
     VTETMBEGA1UECBMKU29tZS1TdGF0ZTEhMB8GA1UEChMYSW50ZXJuZXQgV2lkZ2l0
@@ -138,10 +134,6 @@ env:
   JBP_CONFIG_TOMCAT: "{ tomcat: { ssl_enabled: true } }"
   SERVER_TRUSTSTORE_PASS:  password
   SERVER_TRUSTSTORE: |
-    Bag Attributes
-        friendlyName: client-name
-        localKeyId: 54 69 6D 65 20 31 34 38 37 30 31 35 32 33 38 39 38 31
-    Key Attributes: <No Attributes>
     -----BEGIN ENCRYPTED PRIVATE KEY-----
     UIIB8zCCAVwCCQCLgU6CRfFs5jANBgkqhkiG9w0BAQUFADBFMQswCQYDVQQGEwJB
     VTETMBEGA1UECBMKU29tZS1TdGF0ZTEhMB8GA1UEChMYSW50ZXJuZXQgV2lkZ2l0
